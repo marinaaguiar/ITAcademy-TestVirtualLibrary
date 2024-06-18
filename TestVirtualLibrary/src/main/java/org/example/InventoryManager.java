@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class InventoryManager {
-    //    private ArrayList<Book> bookArrayList = new ArrayList<>();
     private ArrayList<BookCollection> bookCollectionArrayList = new ArrayList<>();
 
     public InventoryManager() {
@@ -38,7 +37,7 @@ public class InventoryManager {
                     message = addDigitalResource();
                     break;
                 case 4:
-//                    message = showInventory();
+                    message = showInventory();
                     break;
                 case 5:
 //                    message = removeResource();
@@ -48,7 +47,7 @@ public class InventoryManager {
         } while (option != 0);
     }
 
-    public String createANewCollection() {
+    private String createANewCollection() {
         String newCollectionName = Input.readString("Insert a name for the book collection: ");
 
         if (collectionAlreadyExists(newCollectionName)) {
@@ -78,7 +77,7 @@ public class InventoryManager {
         return false;
     }
 
-    public String addBookToCollection() {
+    private String addBookToCollection() {
         String newBookName = Input.readString("Insert a name of the book: ");
         double bookPrice = Input.readDouble("Insert the book price in Euros: ");
         int estimatedTimeInSeconds = Input.readInt("Insert the book estimated reading time in seconds: ");
@@ -101,7 +100,7 @@ public class InventoryManager {
         return "Book named: " + newBookName + "of category: " + bookCategory + " added successfully to collection: " + bookCollectionName;
     }
 
-    public String addDigitalResource() {
+    private String addDigitalResource() {
         String newDigitalResourceName = Input.readString("Insert a name of the Digital Resource: ");
         double digitalResourcePrice = Input.readDouble("Insert the Digital Resource price in Euros: ");
         int digitalFormatValue = Input.readInt("Choose a digital format (1. Video, 2. Audio, 3. PDF): ");
@@ -123,6 +122,12 @@ public class InventoryManager {
         return "Digital Resouce: " + newDigitalResourceName + " with format: " + digitalFormat + " added successfully to collection: " + bookCollectionName + "\n";
 
     }
+
+    private void showInventory() {
+
+    }
+
+
 
 
     public double calculateTotalValueInEuros() {
