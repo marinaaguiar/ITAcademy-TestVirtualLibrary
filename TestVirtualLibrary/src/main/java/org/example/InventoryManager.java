@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class InventoryManager {
     //    private ArrayList<Book> bookArrayList = new ArrayList<>();
@@ -34,7 +35,7 @@ public class InventoryManager {
                     message = addBookToCollection();
                     break;
                 case 3:
-//                    message = addDigitalResource();
+                    message = addDigitalResource();
                     break;
                 case 4:
 //                    message = showInventory();
@@ -49,6 +50,12 @@ public class InventoryManager {
 
     public String createANewCollection() {
         String newCollectionName = Input.readString("Insert a name for the book collection: ");
+
+        if (collectionAlreadyExists(newCollectionName)) {
+            System.out.println("Collection '" + newCollectionName + "' already exists.");
+            startMenu();
+        }
+
         int newCollectionAccessValue = Input.readInt("Choose a level of access for the new collection (1. PUBLIC, 2. PRIVATE, 3. RESTRICTED): ");
         if (newCollectionAccessValue > 3 || newCollectionAccessValue < 1) {
             System.out.println("Level does not exist. Try again.");
@@ -61,6 +68,16 @@ public class InventoryManager {
         return "New Collection named '" + romanceCollectionBooks.getName() + "' with access level '" + newCollectionAccess.toString().toLowerCase() + "' created successfully! \n";
     }
 
+    private boolean collectionAlreadyExists(String collectionName) {
+        Optional<BookCollection> bookCollection = bookCollectionArrayList.stream()
+                .filter(d -> d.getName().equalsIgnoreCase(collectionName))
+                .findFirst();
+        if (!bookCollection.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public String addBookToCollection() {
         String newBookName = Input.readString("Insert a name of the book: ");
         double bookPrice = Input.readDouble("Insert the book price in Euros: ");
@@ -68,33 +85,49 @@ public class InventoryManager {
         int bookCategoryValue = Input.readInt("Choose a book category for book (1. Romance, 2. Fiction, 3. Biography, 4. History): ");
         if (bookCategoryValue > 5 || bookCategoryValue < 1) {
             System.out.println("Book category does not exist. Try again.");
-            addBookToCollection();
+            bookCategoryValue = Input.readInt("Choose a book category for book (1. Romance, 2. Fiction, 3. Biography, 4. History): ");
         }
         BookCategory bookCategory = BookCategory.findByValue(bookCategoryValue);
         Book newBook = new Book(newBookName, bookPrice, estimatedTimeInSeconds, bookCategory);
 
-        int counter = 0;
         for (int i = 0; i <= (bookCollectionArrayList.size() - 1); i++) {
             System.out.println((i + 1) + ". " + bookCollectionArrayList.get(i).getName());
         }
 
         int bookCollectionOption = Input.readInt("Choose an existing book collection: ");
         BookCollection bookCollection = bookCollectionArrayList.get(bookCollectionOption - 1);
-
+        bookCollection.addBookToCollection(newBook);
         String bookCollectionName = bookCollection.getName();
-        System.out.println(bookCollectionName);
-
-//        BookCollection bookCollection = bookCollectionArrayList.stream()
-//                .filter(d -> d.getName().equalsIgnoreCase(bookCollectionName))
-//                .findFirst()
-//                .orElseThrow(() -> new ItemNotFoundException("Doctor not found."));
-//        System.out.println("Appointments for doctor " + bookCollectionName + ":");
-
-
-        return "Book named: " + newBookName + "added successfully to collection: " + bookCollectionName;
+        return "Book named: " + newBookName + "of category: " + bookCategory + " added successfully to collection: " + bookCollectionName;
     }
+
+    public String addDigitalResource() {
+        String newDigitalResourceName = Input.readString("Insert a name of the Digital Resource: ");
+        double digitalResourcePrice = Input.readDouble("Insert the Digital Resource price in Euros: ");
+        int digitalFormatValue = Input.readInt("Choose a digital format (1. Video, 2. Audio, 3. PDF): ");
+        if (digitalFormatValue > 3 || digitalFormatValue < 1) {
+            System.out.println("Digital Resource does not exist. Try again.");
+            digitalFormatValue = Input.readInt("Choose a digital format (1. Video, 2. Audio, 3. PDF): ");
+        }
+        DigitalFormat digitalFormat = DigitalFormat.findByValue(digitalFormatValue);
+        DigitalResource newDigitalResource = new DigitalResource(newDigitalResourceName, digitalResourcePrice, digitalFormat);
+
+        for (int i = 0; i <= (bookCollectionArrayList.size() - 1); i++) {
+            System.out.println((i + 1) + ". " + bookCollectionArrayList.get(i).getName());
+        }
+
+        int bookCollectionOption = Input.readInt("Choose an existing book collection: ");
+        BookCollection bookCollection = bookCollectionArrayList.get(bookCollectionOption - 1);
+        String bookCollectionName = bookCollection.getName();
+        bookCollection.addDigitalResourceToCollection(newDigitalResource);
+        return "Digital Resouce: " + newDigitalResourceName + " with format: " + digitalFormat + " added successfully to collection: " + bookCollectionName + "\n";
+
+    }
+
 
     public double calculateTotalValueInEuros() {
         return 0;
     }
 }
+
+
