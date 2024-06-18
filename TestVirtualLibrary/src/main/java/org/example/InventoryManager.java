@@ -123,12 +123,14 @@ public class InventoryManager {
 
     }
 
-    private void showInventory() {
+    private String showInventory() {
+        // Mostrar el inventario actualizado, incluyendo cantidades disponibles y valor total
+        for (int i = 0; i <= (bookCollectionArrayList.size() - 1); i++) {
+            System.out.println((i + 1) + ". " + bookCollectionArrayList.get(i).getName());
+        }
 
+        return "";
     }
-
-
-
 
     public double calculateTotalValueInEuros() {
         return 0;
